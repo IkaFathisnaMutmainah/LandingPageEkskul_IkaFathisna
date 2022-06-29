@@ -92,7 +92,7 @@
         <div class="container">
             <div class="row text-center mb-3">
                 <div class="col">
-                    <h2 data-aos="fade-down" data-aos-duration="3000">My Projects</h2>
+                    <h2 data-aos="fade-down" data-aos-duration="3000">My Portofolio</h2>
                 </div>
             </div>
             <div class="row justify-content-center">
@@ -152,21 +152,29 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <form data-aos="fade-down" data-aos-duration="2000">
+                  <div class="alert alert-success alert-dismissible fade show d-none my-alert" role="alert">
+                    <strong>Terimakasih!</strong> Pesan Anda sudah kami terima.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                    <form name="portofolio-contact-form" data-aos="fade-down" data-aos-duration="2000">
                         <div class="mb-3">
                           <label for="name" class="form-label">Nama Lengkap</label>
-                          <input type="text" class="form-control" id="name" aria-describedby="name">
+                          <input type="text" class="form-control" id="name" aria-describedby="name" name="nama">
                         </div>
                         <div class="mb-3">
                           <label for="email" class="form-label">Email</label>
-                          <input type="email" class="form-control" id="email" aria-describedby="email">
+                          <input type="email" class="form-control" id="email" aria-describedby="email" name="email">
                         </div>
                         <div class="mb-3">
                             <label for="pesan" class="form-label">Pesan</label>
-                            <textarea class="form-control" id="Pesan" rows="3"></textarea>
+                            <textarea class="form-control" id="Pesan" rows="3" name="pesan"></textarea>
                           </div>
                         
-                        <button type="submit" class="btn" style="background-color: #9EB23B;">Kirim</button>
+                        <button type="submit" class="btn btn-kirim" style="background-color: #9EB23B;">Kirim</button>
+                        <button class="btn btn-loading d-none" style="background-color: #9EB23B;" type="button" disabled>
+                          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                          Loading...
+                        </button>
                       </form>
                 </div>
             </div>
@@ -187,5 +195,32 @@
       AOS.init();
     </script>
    
+   <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwSyP43zznjFANRtKWfaE6iCwfhf0454n9HHF4l1Qy5fweowhHWYm-pr1I3cZGcGHAz/exec';
+    const form = document.forms['portofolio-contact-form'];
+    const btnKirim = document.querySelector('.btn-kirim');
+    const btnLoading = document.querySelector('.btn-loading');
+    const myAlert = document.querySelector('.my-alert');
+  
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      //ketika tombol submit diklik
+      //tampilkan tombol loading, hilangkan tombol kirim
+      btnLoading.classList.toggle('d-none');
+      btnKirim.classList.toggle('d-none');
+      fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+        .then(response => {
+          //tampilkan tombol kirim, hilangkan tombol loading
+          btnLoading.classList.toggle('d-none');
+          btnKirim.classList.toggle('d-none');
+          //tampilkan alert
+          myAlert.classList.toggle('d-none');
+          //reset formnya
+          form.reset();
+          console.log('Success!', response);
+        })
+        .catch(error => console.error('Error!', error.message))
+    })
+  </script>
   </body>
 </html>
